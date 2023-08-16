@@ -1,5 +1,6 @@
 const router = require("express").Router();
 const writer = require("../modal/User");
+const PAGE_SIZE = 10;
 
 const CryptoJS = require("crypto-js");
 require("dotenv").config();
@@ -33,10 +34,9 @@ router.post("/login", async (req, res) => {
     let accessToken = jwt.sign(
       {
         id: user._id,
-        isAdmin: user.isAdmin,
       },
       process.env.JWTSEC,
-      { expiresIn: "7d" }
+      { expiresIn: "15d" }
     );
     console.log(hashPassword);
     console.log(accessToken);

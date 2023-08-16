@@ -3,9 +3,9 @@ const BlogSchema = new mongoose.Schema(
   {
     title: { type: String, required: true, unique: true },
     img: { type: String, required: true },
-    categories: { type: Array },
+    categories: [{ type: String }],
     content: { type: String, required: true },
-    links: { type: Array },
+    links: [{ type: String }],
   },
   { timestamps: true }
 );

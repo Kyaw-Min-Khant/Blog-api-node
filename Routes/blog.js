@@ -16,8 +16,8 @@ let upload = multer({ storage: storage });
 
 router.post(
   "/createblog",
-  upload.single("img"),
   verifyToken,
+  upload.single("img"),
   async (req, res) => {
     let newBlog = new Content({
       title: req.body.title,

@@ -8,8 +8,7 @@ const jwt = require("jsonwebtoken");
 
 //Register
 router.post("/signup", async (req, res) => {
-  console.log(req.body.password);
-
+  console.log(req.body);
   let newUser = new writer({
     adminName: req.body.adminName,
     email: req.body.email,
@@ -31,6 +30,7 @@ router.post("/signup", async (req, res) => {
 });
 //login
 router.post("/login", async (req, res) => {
+  console.log(req.body);
   try {
     let user = await writer.findOne({ adminName: req.body.adminName });
     let hashPassword = CryptoJS.AES.decrypt(
@@ -42,14 +42,13 @@ router.post("/login", async (req, res) => {
         id: user._id,
       },
       process.env.JWTSEC,
-      { algorithm: "RS256" },
       { expiresIn: "15d" }
     );
     let rowPassword = hashPassword.toString(CryptoJS.enc.Utf8);
     rowPassword !== req.body.password && res.status(401).json("Login Failed");
     res.status(200).json({ Token: accessToken });
   } catch (e) {
-    res.status(500).json(e);
+    res.status(500).json("Login failed");
   }
 });
 module.exports = router;

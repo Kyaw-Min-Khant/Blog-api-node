@@ -4,19 +4,14 @@ const verifyToken = (req, res, next) => {
   if (authHeader) {
     console.log(process.env.JWTSEC);
     let token = authHeader.split(" ")[1];
-    jwt.verify(
-      token,
-      process.env.JWTSEC,
-      { algorithm: "RS256" },
-      (err, user) => {
-        console.log(token);
-        if (err) {
-          res.status(404).json(err);
-        } else {
-          next();
-        }
+    jwt.verify(token, process.env.JWTSEC, (err, user) => {
+      console.log(token);
+      if (err) {
+        res.status(404).json(err);
+      } else {
+        next();
       }
-    );
+    });
   } else {
     res.status(404).json("Invalid Token");
   }

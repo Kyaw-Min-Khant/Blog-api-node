@@ -8,6 +8,8 @@ const jwt = require("jsonwebtoken");
 
 //Register
 router.post("/signup", async (req, res) => {
+  console.log(req.body.password);
+
   let newUser = new writer({
     adminName: req.body.adminName,
     email: req.body.email,
@@ -16,11 +18,15 @@ router.post("/signup", async (req, res) => {
       process.env.PASSWORD_SECRET
     ).toString(),
   });
-  try {
-    const signUpUser = await newUser.save();
-    res.status(201).json("Register Successful");
-  } catch (err) {
-    res.status(500).json(err);
+  if (req.body.password) {
+    try {
+      const signUpUser = await newUser.save();
+      res.status(201).json("Register Successful");
+    } catch (err) {
+      res.status(500).json(err);
+    }
+  } else {
+    res.status(404).json("Invalid Form");
   }
 });
 //login
@@ -36,10 +42,9 @@ router.post("/login", async (req, res) => {
         id: user._id,
       },
       process.env.JWTSEC,
+      { algorithm: "RS256" },
       { expiresIn: "15d" }
     );
-    console.log(hashPassword);
-    console.log(accessToken);
     let rowPassword = hashPassword.toString(CryptoJS.enc.Utf8);
     rowPassword !== req.body.password && res.status(401).json("Login Failed");
     res.status(200).json({ Token: accessToken });

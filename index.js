@@ -16,7 +16,7 @@ mongoose
   .connect(url, { useNewUrlParser: true, useUnifiedTopology: true })
   .then((data) => console.log("DB Collection Success"))
   .catch((err) => console.log(err));
-app.use(express.static(path.join(__dirname)));
+app.use("uploads", express.static(path.join(__dirname)));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors(corsOption));
 app.use(bodyParser.json());

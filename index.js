@@ -1,10 +1,15 @@
 const express = require("express");
 const app = express();
 require("dotenv").config();
+const cors = require("cors");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const auth = require("./Routes/auth");
 const blogRouter = require("./Routes/blog");
+const corsOption = {
+  origin: "http://localhost:5173",
+  Credentials: true,
+};
 const url = process.env.SECRET_MONGO;
 const path = require("path");
 mongoose
@@ -13,6 +18,7 @@ mongoose
   .catch((err) => console.log(err));
 app.use(express.static(path.join(__dirname)));
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(cors(corsOption));
 app.use(bodyParser.json());
 app.use("/auth", auth);
 app.use("/blog", blogRouter);

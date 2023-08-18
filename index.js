@@ -16,10 +16,11 @@ mongoose
   .connect(url, { useNewUrlParser: true, useUnifiedTopology: true })
   .then((data) => console.log("DB Collection Success"))
   .catch((err) => console.log(err));
-app.use("/uploads", express.static("/uploads"));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors(corsOption));
 app.use(bodyParser.json());
+app.use("/uploads", express.static("uploads"));
+
 app.use("/auth", auth);
 app.use("/blog", blogRouter);
 app.listen(process.env.PORT, () => {

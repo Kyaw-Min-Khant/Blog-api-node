@@ -15,7 +15,7 @@ let storage = multer.diskStorage({
 let upload = multer({ storage: storage });
 
 router.post(
-  "/createblog",
+  "/",
   verifyToken,
   upload.single("img"),
   async (req, res) => {

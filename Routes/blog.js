@@ -5,35 +5,30 @@ const multer = require("multer");
 const { verifyToken } = require("./middleware");
 let storage = multer.diskStorage({
   destination: function (req, file, cb) {
+    console.log(file);
     cb(null, "./uploads");
   },
   filename: function (req, file, cb) {
+    console.log(file);
     cb(null, Date.now() + "_" + file.originalname);
   },
 });
-
 let upload = multer({ storage: storage });
-
-router.post(
-  "/",
-  verifyToken,
-  upload.single("img"),
-  async (req, res) => {
-    let newBlog = new Content({
-      title: req.body.title,
-      img: req.file.filename,
-      categories: req.body.categories,
-      content: req.body.content,
-      links: req.body.links,
-    });
-    try {
-      let createBlog = await newBlog.save();
-      res.status(200).json("Create SuccessFul!!");
-    } catch (err) {
-      res.status(404).json(err);
-    }
+router.post("/", verifyToken, upload.single("img"), async (req, res) => {
+  console.log(req);
+  let newBlog = new Content({
+    title: req.body.title,
+    img: req.file.filename,
+    categories: req.body.categories,
+    content: req.body.content,
+  });
+  try {
+    let createBlog = await newBlog.save();
+    res.status(200).json("Create SuccessFul ! ");
+  } catch (err) {
+    res.status(404).json(err);
   }
-);
+});
 router.put("/:id", verifyToken, async (req, res) => {
   let blogId = req.params.id;
   try {
@@ -42,7 +37,7 @@ router.put("/:id", verifyToken, async (req, res) => {
       { $set: req.body },
       { new: true }
     );
-    res.status(200).json(content);
+    res.status(200).json("Upload Success");
   } catch (err) {
     res.status(404).send(err);
   }
@@ -67,19 +62,19 @@ router.get("/:id", async (req, res) => {
   let blogId = req?.params?.id;
   try {
     let content = await Content.findById(blogId);
-    console.log(content);
     res.status(200).json(content);
   } catch (err) {
     res.status(500).json(err);
   }
 });
 router.delete("/:id", verifyToken, async (req, res) => {
+  console.log(req.params.id);
   let blogId = req?.params?.id;
   try {
     let content = await Content.findByIdAndDelete(blogId);
     res.status(200).json("Delete Successful");
   } catch (err) {
-    res.status(err.status).json("Delete Failed");
+    res.status(err).json("Delete Failed");
   }
 });
 

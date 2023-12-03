@@ -2,25 +2,18 @@ const express = require("express");
 const app = express();
 require("dotenv").config();
 const cors = require("cors");
-const bodyParser = require("body-parser");
-const mongoose = require("mongoose");
 const auth = require("./Routes/auth");
 const blogRouter = require("./Routes/blog");
-const corsOption = {
-  origin: "http://localhost:5173",
-  Credentials: true,
-};
-const url = process.env.SECRET_MONGO;
-const path = require("path");
-mongoose
-  .connect(url, { useNewUrlParser: true, useUnifiedTopology: true })
-  .then((data) => console.log("DB Collection Success"))
-  .catch((err) => console.log(err));
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(cors(corsOption));
-app.use(bodyParser.json());
-app.use("/uploads", express.static("uploads"));
+const { connectDb } = require("./Config/db.config.js");
 
+const path = require("path");
+connectDb();
+app.use(cors());
+app.use(express.json());
+app.use(
+  express.urlencoded({ limit: "60mb", extended: true, parameterLimit: 1000000 })
+);
+app.use("/uploads", express.static("uploads"));
 app.use("/auth", auth);
 app.use("/blog", blogRouter);
 app.listen(process.env.PORT, () => {

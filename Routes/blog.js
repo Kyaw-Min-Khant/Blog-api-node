@@ -3,6 +3,7 @@ const router = require("express").Router();
 require("dotenv").config();
 const multer = require("multer");
 const { verifyToken } = require("./middleware");
+const { getStorage, ref, uploadBytesResumable } = require("firebase/storage");
 let storage = multer.diskStorage({
   destination: function (req, file, cb) {
     console.log(file);
@@ -15,6 +16,11 @@ let storage = multer.diskStorage({
 });
 let upload = multer({ storage: storage });
 router.post("/", verifyToken, upload.single("img"), async (req, res) => {
+  const dateTime = Date.now();
+  const fileName = `images/${dateTime}`;
+  const storageRef = ref(storageFB, fileName);
+  const storageFB = getStorage();
+
   console.log(req);
   let newBlog = new Content({
     title: req.body.title,

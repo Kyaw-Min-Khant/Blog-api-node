@@ -5,29 +5,10 @@ const PAGE_SIZE = 10;
 const CryptoJS = require("crypto-js");
 require("dotenv").config();
 const jwt = require("jsonwebtoken");
+const { singup } = require("../Controllers/AuthController");
 
 //Register
-router.post("/signup", async (req, res) => {
-  console.log(req.body);
-  let newUser = new writer({
-    adminName: req.body.adminName,
-    email: req.body.email,
-    password: CryptoJS.AES.encrypt(
-      req.body.password,
-      process.env.PASSWORD_SECRET
-    ).toString(),
-  });
-  if (req.body.password) {
-    try {
-      const signUpUser = await newUser.save();
-      res.status(201).json("Register Successful");
-    } catch (err) {
-      res.status(500).json(err);
-    }
-  } else {
-    res.status(404).json("Invalid Form");
-  }
-});
+router.post("/signup", singup);
 //login
 router.post("/login", async (req, res) => {
   console.log(req.body);
